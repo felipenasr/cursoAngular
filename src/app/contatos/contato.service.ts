@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Http, Headers, Response } from "@angular/http";
 import { CONTATOS } from "./contatos-mock";
 import { Contato } from "./contato.model";
+import { Observable } from "rxjs";
 import "rxjs/add/operator/toPromise";
 
 @Injectable()
@@ -46,6 +47,17 @@ export class ContatoService {
 
 
     }
+
+    delete(contato: Contato):Promise<Contato>{
+
+        const url = `${this.apiUrl}/${contato.id}`;
+        return this.http
+            .delete( url, {headers: this.headers })
+            .toPromise()
+            .then( () => contato as Contato)
+            .catch(this.handleError);    
+
+    }
     
     
     private handleError(error: any):Promise<any> {
@@ -54,8 +66,19 @@ export class ContatoService {
 
     }
 
+    
+    
+
     getContato(id: number): Promise<Contato>{
         return this.getContatos()
             .then((contatos: Contato[]) => contatos.find( contato => contato.id === id ) )
+    }
+
+    
+    
+    search(term: string): Observable<any>{
+        return this.http
+               .get(`${this.apiUrl}/?nome=${term}`)
+               .map((res: Response) => { res.json()});
     }
 }

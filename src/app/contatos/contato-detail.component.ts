@@ -54,6 +54,10 @@ export class contatoDetails implements OnInit{
         }
     }
 
+    goBack(): void{
+        this.location.back();
+    }
+
     onSubmit(): void{
         
         let promise;
@@ -64,7 +68,7 @@ export class contatoDetails implements OnInit{
             promise = this.contatoService.update(this.contato);            
         }
 
-        promise.then(response => this.location.back());
+        promise.then(response => this.goBack());
     }
 
 }
